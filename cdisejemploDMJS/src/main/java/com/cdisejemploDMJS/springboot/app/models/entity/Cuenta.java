@@ -3,6 +3,8 @@ package com.cdisejemploDMJS.springboot.app.models.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.validation.constraints.NotEmpty;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.lang.NonNull;
 
@@ -26,7 +28,7 @@ public class Cuenta implements Serializable{
 	private Long id;
 	
 	@Column
-	@NonNull
+	@NotEmpty
 	private String Nombre;
 	
 	@Column
@@ -37,7 +39,6 @@ public class Cuenta implements Serializable{
 	private String numeroTelefono;
 	
 	@Column(name = "dia_creacion")
-	@NonNull
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date diaCreacion;
