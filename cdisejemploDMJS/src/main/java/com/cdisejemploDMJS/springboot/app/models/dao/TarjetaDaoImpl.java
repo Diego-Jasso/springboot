@@ -20,7 +20,7 @@ public class TarjetaDaoImpl implements ITarjetaDao {
 	@Transactional(readOnly = true)
 	@Override
 	public List<Tarjeta> findAll() {
-		return em.createQuery("from tarjetas").getResultList();
+		return em.createQuery("from Tarjeta").getResultList();
 	}
 
 	@Transactional
