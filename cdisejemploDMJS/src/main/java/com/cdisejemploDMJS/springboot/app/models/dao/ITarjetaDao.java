@@ -9,4 +9,8 @@ public interface ITarjetaDao {
 	public List<Tarjeta> findAll();
 	
 	public void  save(Tarjeta tarjeta);
+	
+	public Tarjeta findOne(Long id);
+	
+	public void delete(Long id);
 }

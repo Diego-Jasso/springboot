@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8"/>
 <title th:text="${titulo}"></title>
 </head>
 <body>
 <h3 th:text=${titulo}></h3>
 <br>
 <br>
-
+<a th:href="@{/formcuenta}">Registrar cuenta</a>
+<br>
+<a th:href="@{/}">Index</a>
 <table>
 	<thead>
 		<tr>

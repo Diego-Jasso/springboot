@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<title th:text="${titulo}"></title>
+</head>
+<body>
+
+	<h3 th:text="${titulo}"></h3>
+	<br>
+	<p th:text="${mensaje}"></p>
+	<br>
+	<tbody>
+	<p th:if="${result}" th:text="{mensaje}"></p>
+		<div>
+			<form th:action="@{/formcuenta}" th:object="${cuenta}" method="post">
+				<table>
+					<tr>
+						<td>Nombre</td>
+						<td><input type="text" th:field="*{nombre}"></td>
+						<span th:if="${#fields.hasErrors('nombre')}" th:text="${nombreError}"></span>
+					</tr>
+					<tr>
+						<td>Saldo</td>
+						<td><input type="text" th:field="*{saldo}"></td>
+						<span th:if="${#fields.hasErrors('saldo')}" th:text="${saldoError}"></span>
+					</tr>
+					<tr>
+						<td>Numero de telefono</td>
+						<td><input type="text" th:field="*{numeroTelefono}"></td>
+						<span th:if="${#fields.hasErrors('numeroTelefono')}" th:text="${numeroTelefono}"></span>
+					</tr>
+					<tr>
+						<td>Fecha de creacion (yyyy-MM-dd)</td>
+						<td><input type="date" th:field="*{diaCreacion}"></td>
+						<span th:if="${#fields.hasErrors('diaCreacion')}" th:text="${diaCreacion}"></span>
+					</tr>
+				</table>
+				<br> <input type="submit" value="Registrar cuenta"/>
+			</form>
+		</div>
+	</tbody>
+	<hr>
+	<a th:href="@{/listacuentas}">Regresar...</a>
+
+</body>
+</html>

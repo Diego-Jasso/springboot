@@ -3,6 +3,7 @@ package com.cdisejemploDMJS.springboot.app.models.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,17 +29,18 @@ public class Cuenta implements Serializable{
 	private Long id;
 	
 	@Column
-	@NotEmpty
+	@NotBlank(message = "Field is required")
 	private String Nombre;
 	
 	@Column
-	@NonNull
+	@NotBlank(message = "Field is required")
 	private double saldo;
 	
 	@Column(name = "numero_telefono")
 	private String numeroTelefono;
 	
 	@Column(name = "dia_creacion")
+	@NotBlank(message = "Field is required")
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date diaCreacion;

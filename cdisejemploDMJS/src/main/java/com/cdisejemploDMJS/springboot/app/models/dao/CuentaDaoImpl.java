@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cdisejemploDMJS.springboot.app.models.entity.Cuenta;
+import com.cdisejemploDMJS.springboot.app.models.entity.Tarjeta;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -32,6 +33,18 @@ public class CuentaDaoImpl implements ICuentaDao {
 			em.persist(cuenta);
 		}
 		
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Cuenta findOne(Long id) {
+		return em.find(Cuenta.class, id);
+		}
+
+	@Override
+	@Transactional
+	public void delete(Long id) {
+		em.remove(findOne(id));
 	}
 	
 	
