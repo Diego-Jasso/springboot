@@ -7,36 +7,32 @@
 <body>
 
 	<h3 th:text="${titulo}"></h3>
-	<br>
-	<p th:text="${mensaje}"></p>
-	<br>
 	<tbody>
-	<p th:if="${result}" th:text="{mensaje}"></p>
+	<p th:if="${result}" th:text="${mensaje}"></p>
 		<div>
 			<form th:action="@{/formcuenta}" th:object="${cuenta}" method="post">
 				<table>
 					<tr>
 						<td>Nombre</td>
-						<td><input type="text" th:field="*{nombre}"></td>
-						<span th:if="${#fields.hasErrors('nombre')}" th:text="${nombreError}"></span>
+						<td><input type="text" th:field="*{nombre}" required></td>
+						<div th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" ></div>
 					</tr>
 					<tr>
 						<td>Saldo</td>
-						<td><input type="text" th:field="*{saldo}"></td>
-						<span th:if="${#fields.hasErrors('saldo')}" th:text="${saldoError}"></span>
+						<td><input type="text" th:field="*{saldo}" required></td>
+						<div th:if="${#fields.hasErrors('saldo')}" th:errors="*{saldo}" ></div>
 					</tr>
 					<tr>
 						<td>Numero de telefono</td>
-						<td><input type="text" th:field="*{numeroTelefono}"></td>
-						<span th:if="${#fields.hasErrors('numeroTelefono')}" th:text="${numeroTelefono}"></span>
+						<td><input type="number" th:field="*{numeroTelefono}" required></td>
+						<div th:if="${#fields.hasErrors('numeroTelefono')}" th:errors="*{numeroTelefono}" ></div>
 					</tr>
 					<tr>
-						<td>Fecha de creacion (yyyy-MM-dd)</td>
-						<td><input type="date" th:field="*{diaCreacion}"></td>
-						<span th:if="${#fields.hasErrors('diaCreacion')}" th:text="${diaCreacion}"></span>
+						<td>Fecha de creacion</td>
+						<td><input type="date" th:field="*{diaCreacion}" required></td>
 					</tr>
 				</table>
-				<br> <input type="submit" value="Registrar cuenta"/>
+				<br> <input type="submit" th:value=${boton}/>
 			</form>
 		</div>
 	</tbody>

@@ -1,5 +1,6 @@
 package com.cdisejemploDMJS.springboot.app.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -18,7 +19,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
 import com.cdisejemploDMJS.springboot.app.models.dao.ICuentaDao;
+import com.cdisejemploDMJS.springboot.app.models.dao.ITarjetaDao;
 import com.cdisejemploDMJS.springboot.app.models.entity.Cuenta;
+import com.cdisejemploDMJS.springboot.app.models.entity.Tarjeta;
+import com.cdisejemploDMJS.springboot.app.services.ICuentaServices;
+import com.cdisejemploDMJS.springboot.app.validator.CuentaValidator;
 
 
 @Controller
@@ -28,6 +33,12 @@ public class CuentaController {
 	@Autowired
 	private ICuentaDao cuentaDao;
 	
+	@Autowired
+	private ITarjetaDao tarjetaDao;
+	@Autowired
+	private ICuentaServices cuentaServices;
+	@Autowired
+	private CuentaValidator cuentaValidator;
 	@GetMapping("/listacuentas")
 	public String cuentaLista(Model model) {
 		model.addAttribute("titulo","Lista de cuentas");
@@ -40,43 +51,54 @@ public class CuentaController {
 		Cuenta cuenta = new Cuenta();
 		model.put("cuenta", cuenta);
 		model.put("titulo","Llenar los datos de la cuenta");
+		model.put("boton","Registrar ");
 		return "formcuenta";
 	}
 	
 	@RequestMapping(value ="/formcuenta/{id}")
 	public String editar(@PathVariable(value="id") Long id, Map<String, Object> model) {
 		Cuenta cuenta = null;
-		if (id>0) {
+		if (id != null && id>0) {
 			cuenta = cuentaDao.findOne(id);
 		}else {
 			return "redirect:/listacuentas";
 		}
 		model.put("cuenta", cuenta);
 		model.put("titulo","Editar cuenta");
-		return "formtarjeta";
+		model.put("boton","Editar ");
+		return "formcuenta";
 	}
 	
 	@PostMapping(value = "/formcuenta")
 	public String guardar(@Valid Cuenta cuenta, BindingResult result, Model model, SessionStatus status) {
 		
+		cuentaValidator.validate(cuenta,result);
 		if(result.hasErrors()) {
-			model.addAttribute("titulo","Ocurrio un error");
-			for(FieldError error : result.getFieldErrors()) {
-	            model.addAttribute(error.getField() + "Error", error.getDefaultMessage());
-	        }
+			model.addAttribute("titulo","Llenar los datos de la cuenta");
+			model.addAttribute("result", result.hasErrors());
+			model.addAttribute("mensaje","Ocurrio un error");
+			model.addAttribute("errList",result.getFieldError());
+			model.addAttribute("boton","Registrar ");
 			return "formcuenta";
+		}else {
+			model.addAttribute("result",false);
+			model.addAttribute("errList","");
 		}
 		
 		cuentaDao.save(cuenta);
 		status.setComplete();
 		model.addAttribute("titulo","La cuenta se ha creado con exito");
-		return "formcuenta";
+		model.addAttribute("boton","Registrar ");
+		return "redirect:/formcuenta";
 	}
 	
-	@DeleteMapping("/eliminarcuenta/{id}")
-	public String eliminar(@PathVariable(value = "id") Long id) {
-		if(id > 0 ) {
+	@RequestMapping("/eliminarcuenta/{id}")
+	public String eliminar(@PathVariable(value = "id") Long id, Model model) {
+		List<Tarjeta> list = tarjetaDao.findAll();
+		if(id != null && id > 0 && !cuentaServices.searchInTarjetas(id, list)) {
 			cuentaDao.delete(id);
+		}else {
+			model.addAttribute("mensaje","La cuenta no se puede eliminar porque contiene tarjetas, elimine las tarjetas primero");
 		}
 		return "redirect:/listacuentas";
 	}

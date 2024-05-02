@@ -7,10 +7,8 @@
 <body>
 <h3 th:text=${titulo}></h3>
 <br>
-<br>
-<a th:href="@{/formtarjeta}">Registrar tarjeta</a>
-<br>
-<a th:href="@{/}">Index</a>
+<a th:href="@{/formtarjeta}">Registrar tarjeta</a><a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a> <a th:href="@{/}">Volver al inicio</a>
+
 <table>
 	<thead>
 		<tr>
@@ -30,7 +28,9 @@
 			<td th:text="${tarjeta.getNumeroTarjeta()}"></td>
 			<td th:text="${tarjeta.getIcv()}"></td>
 			<td th:text="${tarjeta.getVencimiento()}"></td>
-			<td th:text="${tarjeta.getCuenta()}"></td>
+			<td th:text="${'ID: '+ tarjeta.getCuenta().getId() + ' Nombre: ' + tarjeta.getCuenta().getNombre()}"></td>
+			<td><a th:href="@{/formtarjeta/} + ${tarjeta.getId()}" th:text = "'Editar'"></a></td>
+			<td><a th:href="@{/eliminartarjeta/} + ${tarjeta.getId()}" th:text = "'Eliminar'" onclick="return confirm('¿Estas seguro que deseas eliminar la tarjeta?');"></a></td>
 		</tr>
 	</tbody>
 </table>

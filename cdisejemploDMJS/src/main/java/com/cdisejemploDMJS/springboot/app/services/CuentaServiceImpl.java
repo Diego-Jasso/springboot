@@ -5,11 +5,13 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.cdisejemploDMJS.springboot.app.models.entity.Cuenta;
+import com.cdisejemploDMJS.springboot.app.models.entity.Tarjeta;
 
 @Service
 public class CuentaServiceImpl implements ICuentaServices {
 
 	private List<Cuenta> lista;
+	private List<Tarjeta> listaTarjetas;
 	
 	public CuentaServiceImpl() {
 		
@@ -27,6 +29,16 @@ public class CuentaServiceImpl implements ICuentaServices {
 			}
 		}
 		return cuentaResult;
+	}
+	
+	public boolean searchInTarjetas(Long id, List<Tarjeta> lista) {
+		this.listaTarjetas = lista;
+		for(Tarjeta tarjeta: this.listaTarjetas) {
+			if(tarjeta.getCuenta().getId() == id) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

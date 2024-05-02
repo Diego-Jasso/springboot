@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +24,7 @@ import com.cdisejemploDMJS.springboot.app.models.dao.ICuentaDao;
 import com.cdisejemploDMJS.springboot.app.models.dao.ITarjetaDao;
 import com.cdisejemploDMJS.springboot.app.models.entity.Cuenta;
 import com.cdisejemploDMJS.springboot.app.models.entity.Tarjeta;
+import com.cdisejemploDMJS.springboot.app.validator.TarjetaValidator;
 
 @Controller
 @SessionAttributes("tarjeta")
@@ -38,6 +38,9 @@ public class TarjetaController {
 	
 	@Autowired
 	private CuentaPropertyEditor cuentaEditor;
+	
+	@Autowired
+	private TarjetaValidator tarjetaValidator;
 	
 	@InitBinder
 	public void InitBinder(WebDataBinder binder) {
@@ -59,34 +62,43 @@ public class TarjetaController {
 		model.put("tarjeta", tarjeta);
 		modelList.addAttribute("listaCuentas",listaCuentas);
 		model.put("titulo","Llenar los datos de una tarjeta");
+		model.put("boton","Registrar ");
 		return "formtarjeta";
 	}
 	
 	@RequestMapping(value = "/formtarjeta/{id}")
-	public String editar(@PathVariable(value="id") Long id, Map<String, Object> model) {
+	public String editar(@PathVariable(value="id") Long id, Map<String, Object> model,Model modelList) {
 		Tarjeta tarjeta = null;
-		if (id>0) {
+		List<Cuenta> listaCuentas = cuentaDao.findAll();
+		modelList.addAttribute("listaCuentas",listaCuentas);
+		if (id != null && id>0) {
 			tarjeta = tarjetaDao.findOne(id);
 		}else {
 			return "redirect:/listatarjetas";
 		}
 		model.put("tarjeta", tarjeta);
+		model.put("boton","Editar ");
 		model.put("titulo","Editar tarjeta");
 		return "formtarjeta";
 	}
 	
 	@PostMapping(value="/formtarjeta")
 	public String guardar(@Valid Tarjeta tarjeta, BindingResult result, Model model, SessionStatus status, RedirectAttributes flash) {
-		
+		List<Cuenta> listaCuentas = cuentaDao.findAll();
+		model.addAttribute("listaCuentas",listaCuentas);
+		tarjetaValidator.validate(tarjeta,result);
 		if(result.hasErrors()) {
 			model.addAttribute("titulo","Formulario de tarjeta");
 			model.addAttribute("result",result.hasErrors());
-			model.addAttribute("mensaje","Error al enviar los datos");
+			model.addAttribute("mensaje","Ocurrio un error");
+			model.addAttribute("errList",result.getFieldError());
+			model.addAttribute("boton","Registrar ");
 			return "formtarjeta";
 		}else {
 			model.addAttribute("result",false);
+			model.addAttribute("errList","");
 		}
-		
+		model.addAttribute("boton","Registrar ");
 		model.addAttribute("titulo","Formulario de tarjeta");
 		model.addAttribute("mensaje","Se envio la información correctamente");
 		try {
@@ -97,13 +109,12 @@ public class TarjetaController {
 		}
 		
 		status.setComplete();
-		model.addAttribute("titulo","La cuenta se ha creado con exito");
-		return "formtarjeta";
+		return "redirect:/formtarjeta";
 	}
 	
-	@DeleteMapping("/eliminartarjeta/{id}")
+	@RequestMapping(value="/eliminartarjeta/{id}")
 	public String eliminar(@PathVariable(value = "id") Long id) {
-		if(id > 0 ) {
+		if(id != null && id > 0 ) {
 			tarjetaDao.delete(id);
 		}
 		return "redirect:/listatarjetas";

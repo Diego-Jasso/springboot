@@ -2,18 +2,20 @@ package com.cdisejemploDMJS.springboot.app.models.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.lang.NonNull;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -29,11 +31,9 @@ public class Cuenta implements Serializable{
 	private Long id;
 	
 	@Column
-	@NotBlank(message = "Field is required")
 	private String Nombre;
 	
 	@Column
-	@NotBlank(message = "Field is required")
 	private double saldo;
 	
 	@Column(name = "numero_telefono")
@@ -44,6 +44,9 @@ public class Cuenta implements Serializable{
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date diaCreacion;
+	
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "cuenta", cascade = CascadeType.MERGE)
+	private List<Tarjeta> tarjetas;
 
 	public Long getId() {
 		return id;

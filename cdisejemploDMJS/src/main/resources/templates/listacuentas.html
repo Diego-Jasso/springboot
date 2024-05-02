@@ -7,10 +7,8 @@
 <body>
 <h3 th:text=${titulo}></h3>
 <br>
-<br>
-<a th:href="@{/formcuenta}">Registrar cuenta</a>
-<br>
-<a th:href="@{/}">Index</a>
+<p th:text="${mensaje}"></p>
+<a th:href="@{/formcuenta}">Registrar cuenta</a><a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a> <a th:href="@{/}">Volver al inicio</a>
 <table>
 	<thead>
 		<tr>
@@ -31,6 +29,8 @@
 			<td th:text="${cuenta.getSaldo()}"></td>
 			<td th:text="${cuenta.getNumeroTelefono()}"></td>
 			<td th:text="${cuenta.getDiaCreacion()}"></td>
+			<td><a th:href="@{/formcuenta/} + ${cuenta.getId()}" th:text = "'Editar'"></a></td>
+			<td><a th:href="@{/eliminarcuenta/} + ${cuenta.getId()}" th:text = "'Eliminar'" onclick="return confirm('¿Estas seguro que deseas eliminar la cuenta?');"></a></td>
 		</tr>
 	</tbody>
 </table>

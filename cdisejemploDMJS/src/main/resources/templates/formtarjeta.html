@@ -3,43 +3,42 @@
 <head>
 <meta charset="UTF-8"/>
 <title th:text="${titulo}"></title>
-<!--link href="../static/css/Layout.css" th:href="@{/css/Layout.css}" rel="stylesheet"/-->
 </head>
 <body>
 
 	<h3 th:text="${titulo}"></h3>
-	<br>
-	<p th:text="${mensaje}"></p>
-	<br>
 	<tbody>
-	<p th:if="${result}" th:text="{mensaje}"></p>
+	<p th:if="${result}" th:text="${mensaje}"></p>
 		<div>
 			<form th:action="@{/formtarjeta}" th:object="${tarjeta}" method="post">
 				<table>
 					<tr>
 						<td>Numero de tarjeta (16 digitos)</td>
-						<td><input type="text" th:field="*{numeroTarjeta}"></td>
+						<td><input type="text" th:field="*{numeroTarjeta}" required></td>
+						<div th:if="${#fields.hasErrors('numeroTarjeta')}" th:errors="*{numeroTarjeta}" ></div>
 					</tr>
 					<tr>
 						<td>Numero de seguridad: ICV (3 digitos)</td>
-						<td><input type="text" th:field="*{icv}"></td>
+						<td><input type="text" th:field="*{icv}" required></td>
+						<div th:if="${#fields.hasErrors('icv')}" th:errors="*{icv}" ></div>
 					</tr>
 					<tr>
-						<td>Fecha de vencimiento (yyyy-MM-dd)</td>
-						<td><input type="date" th:field="*{vencimiento}"></td>
+						<td>Fecha de vencimiento</td>
+						<td><input type="date" th:field="*{vencimiento}" required></td>
 					</tr>
 					<tr>
 						<td>ID cuenta</td>
 						<td>
-							<select th:field="*{cuenta}">
+							<select th:field="*{cuenta}" required>
 								<option th:each="cuenta : ${listaCuentas}"
 										th:value="${cuenta.getId()}"
 										th:text="${cuenta.getId()+' Nombre: '+cuenta.getNombre()}"></option>
 							</select>
+							<div th:if="${#fields.hasErrors('cuenta')}" th:errors="*{cuenta}" ></div>
 					</tr>
 					
 				</table>
-				<br> <input type="submit" value="Registrar tarjeta"/>
+				<br> <input type="submit" th:value=${boton}/>
 			</form>
 		</div>
 	</tbody>
