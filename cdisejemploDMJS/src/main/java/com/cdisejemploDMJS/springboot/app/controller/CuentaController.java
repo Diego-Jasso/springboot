@@ -97,9 +97,13 @@ public class CuentaController {
 		List<Tarjeta> list = tarjetaDao.findAll();
 		if(id != null && id > 0 && !cuentaServices.searchInTarjetas(id, list)) {
 			cuentaDao.delete(id);
+			return "redirect:/listacuentas";
 		}else {
-			model.addAttribute("mensaje","La cuenta no se puede eliminar porque contiene tarjetas, elimine las tarjetas primero");
+			model.addAttribute("titulo","Lista de cuentas");
+			model.addAttribute("cuentas",cuentaDao.findAll());
+			model.addAttribute("mensaje","La cuenta no se puede eliminar porque contiene tarjetas, elimine las tarjetas de la cuenta y vuelva a intentarlo");
+			return "listacuentas";
 		}
-		return "redirect:/listacuentas";
+		
 	}
 }
